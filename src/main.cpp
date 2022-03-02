@@ -82,7 +82,7 @@ static void lv_tick_task(void)
 
 void setupPlatform() {
   // enable serial
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   esp_err_t err = esp_register_freertos_tick_hook((esp_freertos_tick_cb_t)lv_tick_task); 
   // TODO: check err
@@ -183,16 +183,22 @@ void setup()
     lv_btnmatrix_set_ctrl_map(btnm, btnm_control);
     //lv_btnmatrix_set_btn_width(btnm, 10, 2);
     lv_obj_align(btnm, LV_ALIGN_TOP_MID, 0, 10);
-    lv_obj_set_style_text_font(btnm, &lv_font_montserrat_30, 0);
     lv_obj_set_height(btnm, lv_pct(30));
     lv_obj_set_width(btnm, lv_pct(90));
+
+    // шрифт
+    lv_obj_set_style_text_font(btnm, &lv_font_montserrat_30, 0);
+    // изменить стиль кнопок
+    lv_obj_set_style_bg_opa(btnm, LV_OPA_TRANSP, LV_PART_MAIN);
+    lv_obj_set_style_border_opa(btnm, LV_OPA_TRANSP, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(btnm, lv_color_white(), LV_PART_ITEMS);
 
     // lv_obj_add_event_cb(btnm1, event_handler, LV_EVENT_ALL, NULL);
     lv_obj_t * chart;
     chart = lv_chart_create(lv_scr_act());
-    lv_obj_align(chart, LV_ALIGN_BOTTOM_MID, -20, -15);
-    lv_obj_set_height(chart, lv_pct(60));
-    lv_obj_set_width(chart, lv_pct(70));
+    lv_obj_align(chart, LV_ALIGN_BOTTOM_MID, -40, -15);
+    lv_obj_set_height(chart, lv_pct(65));
+    lv_obj_set_width(chart, lv_pct(80));
     lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
 
     lv_chart_set_range(chart, LV_CHART_AXIS_SECONDARY_Y, 0, 10000);
@@ -239,6 +245,19 @@ void setup()
 
     lv_chart_refresh(chart); /*Required after direct set*/
 
+    lv_obj_t * btn = lv_btn_create(lv_scr_act());
+    lv_obj_set_style_text_font(btn, &lv_font_montserrat_30, 0);
+    lv_obj_add_flag(btn, LV_OBJ_FLAG_FLOATING | LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_style_bg_color(btn, lv_color_white(), LV_STATE_CHECKED);
+    lv_obj_set_style_pad_all(btn, 10, 0);
+    lv_obj_set_style_radius(btn, LV_RADIUS_CIRCLE, 0);
+    lv_obj_set_style_shadow_width(btn, 0, 0);
+    lv_obj_set_style_bg_img_src(btn, LV_SYMBOL_SETTINGS, 0);
+
+    //lv_obj_add_event_cb(btn, color_changer_event_cb, LV_EVENT_ALL, color_cont);
+
+    lv_obj_set_size(btn, LV_DPX(42), LV_DPX(42));
+    lv_obj_align(btn, LV_ALIGN_BOTTOM_RIGHT, -LV_DPX(15), -LV_DPX(15));
 
     /* setup done */
     Serial.println( "Setup done" );
